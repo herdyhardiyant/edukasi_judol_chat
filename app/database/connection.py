@@ -21,18 +21,18 @@ def get_database_session():
 SessionDependency = Annotated[Session, Depends(get_database_session)]
 
 def create_chat_message(message_content: str,
-                            is_user_message: bool,
+                            bot_answer: str,
                               chat_session: ChatSession,
                               db_session: Session
                               ):
     """
     Buat pesan baru untuk chat session saat ini.
-    Jika tidak ada chat session, maka akan dibuat baru.
+    Jika tidak ada chat session, maka buat chat session baru beserta dengan nilai user_session disimpan di cookie pengguna.
     """
     new_message = ChatMessage(
         message_content=message_content,
         session_id= chat_session.id,
-        bot_answer=""
+        bot_answer=bot_answer
     )
     
     db_session.add(new_message)
@@ -42,9 +42,9 @@ def create_chat_message(message_content: str,
 
 async def get_all_messages(chat_session: ChatSession, db_session: Session):
         """
-        Mengambil semua pesan
+        Mengambil semua riwayat pesan pengguna saat ini.
         """
-        message_statement = select(ChatMessage).where(ChatMessage.session_id == chat_session.id)
+        message_statement = select(ChatMessage).where(ChatMessage.session == chat_session)
         messages = db_session.exec(message_statement).all()
         return messages
 

@@ -45,12 +45,14 @@ def create_new_chat_session_to_db(db_session: SessionDependency):
 
 @router.get("/")
 async def home(request: Request, response: Response, db_session: SessionDependency ):
-    template_response = templates.TemplateResponse("index.html", {"request": request, "message": "Welcome"})
     
     chat_session = get_chat_session(request, user_session_key_name, db_session)
     
+    template_response = templates.TemplateResponse("index.html", {"request": request, "message": "Welcome"})
+    
     if not chat_session:
         new_session_uuid = create_new_chat_session_to_db(db_session)
+        # Jangan lupa untuk mengirim session ke cookie pengguna setiap kali membuat chat session
         template_response.set_cookie(key=user_session_key_name, value=new_session_uuid, httponly=True, secure=False, samesite="lax")
 
     return template_response
