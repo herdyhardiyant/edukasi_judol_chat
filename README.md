@@ -7,10 +7,15 @@ fastapi_project/
 │
 ├── app/
 │   ├── main.py           # Entry point aplikasi  
+│   ├── database           
+│   │   ├── connection.py   # Database Engine & Fungsi interaksi dengan Database
+│   │   ├── models.py       # Struktur table dalam database
+│   │   └── database.db
 │   ├── routes/
 │   │   └── web.py        # Routing untuk halaman web
 │   ├── templates/        # Template HTML
-│   │   └── index.html    
+│   │   ├── index.html  
+│   │   └── components/
 │   └── static/           # File statis (CSS, JS, dll)
 │       ├── css/
 │       └── js/
