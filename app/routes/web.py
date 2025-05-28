@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from typing import Annotated, Optional
 from fastapi.responses import RedirectResponse
 from app.database.models import ChatSession
-from app.database.connection import SessionDependency
+from app.database.connection import SessionDependency, create_chat_message, get_all_messages
 from sqlmodel import select
 from uuid import uuid4
 from datetime import datetime, timezone
@@ -47,8 +47,14 @@ def create_new_chat_session_to_db(db_session: SessionDependency):
 async def home(request: Request, response: Response, db_session: SessionDependency ):
     
     chat_session = get_chat_session(request, user_session_key_name, db_session)
+    messages = None
     
-    template_response = templates.TemplateResponse("index.html", {"request": request, "message": "Welcome"})
+    if chat_session:
+        messages = await get_all_messages(chat_session, db_session)
+    
+    print(messages) 
+       
+    template_response = templates.TemplateResponse("index.html", {"request": request, "chat_data": messages})
     
     if not chat_session:
         new_session_uuid = create_new_chat_session_to_db(db_session)
@@ -60,4 +66,7 @@ async def home(request: Request, response: Response, db_session: SessionDependen
 
 @router.post("/submit")
 async def submit(req: Request, res: Response, prompt: Annotated[str, Form()], db: SessionDependency):
+    chat_session = get_chat_session(req, user_session_key_name, db)
+    if chat_session:
+        create_chat_message(prompt, "This is the system answer", chat_session, db)
     return RedirectResponse("/", status_code=303)

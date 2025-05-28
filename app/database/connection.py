@@ -4,7 +4,7 @@ from app.database.models import *
 from typing import Annotated
 from fastapi import Depends
 
-sqlite_file_name = "database.db"
+sqlite_file_name = "database.sqlite"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
 connection_args = {"check_same_thread": False}
@@ -27,7 +27,8 @@ def create_chat_message(message_content: str,
                               ):
     """
     Buat pesan baru untuk chat session saat ini.
-    Jika tidak ada chat session, maka buat chat session baru beserta dengan nilai user_session disimpan di cookie pengguna.
+    Jika tidak ada chat session, maka buat chat session baru beserta dengan nilai user_session disimpan di cookie user.
+    chat_session merupakan kredensial autentifikasi user untuk mengakses riwayat chatnya sendiri.
     """
     new_message = ChatMessage(
         message_content=message_content,
@@ -42,7 +43,7 @@ def create_chat_message(message_content: str,
 
 async def get_all_messages(chat_session: ChatSession, db_session: Session):
         """
-        Mengambil semua riwayat pesan pengguna saat ini.
+        Mengambil semua riwayat pesan user saat ini.
         """
         message_statement = select(ChatMessage).where(ChatMessage.session == chat_session)
         messages = db_session.exec(message_statement).all()
