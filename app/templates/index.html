@@ -19,6 +19,7 @@
     {% endif %}
 
     <div id="chat-box" class="mt-4 container-sm">
+      
         {% for chat in chat_data %}
         <div>
             <p>You: {{chat.message_content}}</p>
@@ -29,6 +30,7 @@
         </div>
 
         {% endfor %}
+      
     </div>
 
     <div id="input-box"

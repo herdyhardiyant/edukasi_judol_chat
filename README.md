@@ -3,10 +3,12 @@
 
 ### 🗂 Struktur Proyek
 ```
-fastapi_project/
+project/
 │
 ├── app/
 │   ├── main.py           # Entry point aplikasi  
+│   ├── auth
+│   │   └── middleware.py # Middleware untuk autentifikasi user & registrasi chat session untuk user baru 
 │   ├── database           
 │   │   ├── connection.py   # Database Engine & Fungsi interaksi dengan Database
 │   │   ├── models.py       # Struktur table dalam database
