@@ -45,7 +45,7 @@ async def get_all_messages(chat_session: ChatSession, db_session: Session):
         """
         Mengambil semua riwayat pesan user saat ini.
         """
-        message_statement = select(ChatMessage).where(ChatMessage.session == chat_session)
+        message_statement = select(ChatMessage).where(ChatMessage.session_id == chat_session.id)
         messages = db_session.exec(message_statement).all()
         return messages
 
