@@ -1,4 +1,4 @@
-// Chat bottom offset height
+// Chat bottom part offset height adjustment
 const inputBoxDiv = document.getElementById("input-box")
 const chatOffset = inputBoxDiv.offsetHeight + 40
 const emptyOffsetDiv = document.getElementById("chat-empty-offset")
@@ -43,4 +43,35 @@ cancelImageUpload.addEventListener("click", (event) => {
     previewImage.src = "#"
 
     imgInput.value = ""
+})
+
+// Form Submission
+const formSubmission = document.getElementById("form-submission")
+
+formSubmission.addEventListener('submit', async function(params) {
+    params.preventDefault()
+    const messageContent = document.getElementById("message").value.trim()
+    const imageFile = imgInput.files[0]
+    
+    const formData = new FormData()
+
+    if (messageContent) {
+        formData.append("message", messageContent)
+    }
+
+    if (imageFile) {
+        formData.append("image", imageFile)
+    }
+
+    try {
+        const response = await fetch('/submit', {
+            method: 'POST',
+            body: formData
+        })
+
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error)
+    }
+
+
 })

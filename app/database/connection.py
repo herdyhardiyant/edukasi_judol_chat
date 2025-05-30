@@ -4,7 +4,7 @@ from app.database.models import *
 from typing import Annotated
 from fastapi import Depends
 
-sqlite_file_name = "database.sqlite"
+sqlite_file_name = "chat.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
 connection_args = {"check_same_thread": False}
@@ -20,8 +20,9 @@ def get_database_session():
         
 SessionDependency = Annotated[Session, Depends(get_database_session)]
 
-def create_chat_message(message_content: str,
-                            bot_answer: str,
+def create_chat_message(message_content: Optional[str],
+                            bot_answer: Optional[str],
+                            new_image_url: Optional[str],
                               chat_session: ChatSession,
                               db_session: Session
                               ):
@@ -33,7 +34,8 @@ def create_chat_message(message_content: str,
     new_message = ChatMessage(
         message_content=message_content,
         session_id= chat_session.id,
-        bot_answer=bot_answer
+        bot_answer=bot_answer,
+        image_url=new_image_url
     )
     
     db_session.add(new_message)

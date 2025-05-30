@@ -21,7 +21,8 @@ class ChatMessage(SQLModel, table=True):
     """
     id: Optional[int] = Field(default=None, primary_key=True)
     session_id: Optional[int] = Field(default=None, foreign_key="chatsession.id")
-    message_content: str
+    message_content: Optional[str]
     bot_answer: Optional[str]
+    image_url: Optional[str] 
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     session: ChatSession = Relationship(back_populates="messages")
